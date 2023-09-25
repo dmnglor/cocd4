@@ -47,7 +47,7 @@ public class ProductControllerTest {
 	    	products.add(new Product(106, "Dishwasher ", "12WP9087", 10000.00, 4));
 	    	products.add(new Product(107, "Charger ", "12WP9087", 10000.00, 4));
 	    	products.add(new Product(108, "Charger ", "12WP9087", 10000.00, 4));
-	    	products.add(new Product(109, "Charger ", "12WP9087", 10000.00, 4));
+	    	products.add(new Product(110, "Charger ", "12WP9087", 10000.00, 4));
 
 	    	
 	    	when(productService.findAll()).thenReturn(products);
