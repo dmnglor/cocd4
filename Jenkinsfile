@@ -18,7 +18,7 @@ stages{
             bat 'mvnw test'
         }
     }
-    stage('Docker Image'){
+    stage('Docker Image to DockerHub'){
         steps{
             script{
              withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW', usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR')]) {
