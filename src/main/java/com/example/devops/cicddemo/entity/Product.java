@@ -5,7 +5,7 @@ import lombok.Builder;
 @Builder
 public class Product 
 {
-private int id;
+private id;
 private String pname;
 private String batchno;
 private double price;
