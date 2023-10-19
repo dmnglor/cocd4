@@ -6,7 +6,7 @@ pipeline{
     environment {   
         DOCKER_REGISTRY = "https://index.docker.io/v1/"
         DOCKER_IMAGE_NAME = "dayalathakodagi/devops-integration:latest"
-       	CHATGPT_API_TOKEN_SERVICE_URL = 'http://localhost:8092/generateResponse'
+       	CHATGPT_API_TOKEN_SERVICE_URL = 'http://localhost:8092'
  
     }
 
@@ -19,23 +19,24 @@ pipeline{
                       bat 'mvn clean install'
               }catch(Exception buildError){
                    currentBuild.result='FAILURE'
-                   //def prompt = "I encountered a build issue: ${buildError}"
-                    def prompt = "what is java"
+                   def prompt = "I encountered a build issue: ${buildError}"
+                   def serviceUrl = CHATGPT_API_TOKEN_SERVICE_URL
                    // Retrieve the bearer token from Jenkins credentials
-                    def bearerTokenCredential = credentials('YourBearerTokenCredentialID') // Replace with your credential ID
-                    def bearerToken = bearerTokenCredential ?: ''
-                    def serviceUrl = CHATGPT_API_TOKEN_SERVICE_URL as String
+                    def bearerTokenCredentialId = 'YourBearerTokenCredentialID' // Replace with your credential ID
+                    def bearerTokenCredential = credentials(bearerTokenCredentialId)
+                    def bearerToken = bearerTokenCredential ? bearerTokenCredential.toString() : ''
+                    
                     def headers = [
-                            Authorization: "Bearer ${bearerToken}"
-                        ]
-                   // Make an HTTP POST request to your Spring Boot service
-                        def response = httpRequest(
-                            contentType: 'APPLICATION_JSON',
-                            httpMode: 'POST',
-                            customHeaders: headers,
-                            requestBody: "{\"inputText\": \"${prompt}\"}",
-                            url: serviceUrl
-                        )
+                        Authorization: "Bearer $bearerToken"
+                       ]
+
+                    def response = httpRequest(
+                        contentType: 'APPLICATION_JSON',
+                        httpMode: 'POST',
+                        requestBody: "{\"inputText\": \"${prompt}\"}",
+                        headers: headers,
+                        url: serviceUrl
+                    )
                         echo prompt
                         // Print the ChatGPT response
                         echo "ChatGPT suggests: ${response.getContent()}"
