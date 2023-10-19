@@ -6,7 +6,7 @@ pipeline{
     environment {   
         DOCKER_REGISTRY = "https://index.docker.io/v1/"
         DOCKER_IMAGE_NAME = "dayalathakodagi/devops-integration:latest"
-       	CHATGPT_API_TOKEN_SERVICE_URL = 'http://localhost:8092'
+       	CHATGPT_API_TOKEN_SERVICE_URL = 'http://localhost:8092/generateResponse'
  
     }
 
@@ -17,30 +17,33 @@ pipeline{
                   try{
                       checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/dmnglor/cocd4']])
                       bat 'mvn clean install'
-              }catch(Exception buildError){
-                   currentBuild.result='FAILURE'
-                   def prompt = "I encountered a build issue: ${buildError}"
-                   def serviceUrl = CHATGPT_API_TOKEN_SERVICE_URL
+                  }catch(Exception buildError){
+                   currentBuild.result='FAILURE'   
+                      /////chatgpt
+                    def prompt = "I encountered a build issue: ${buildError}"
+                    def serviceUrl = CHATGPT_API_TOKEN_SERVICE_URL
                    // Retrieve the bearer token from Jenkins credentials
-                    def bearerTokenCredentialId = 'YourBearerTokenCredentialID' // Replace with your credential ID
+                    def bearerTokenCredentialId = 'YourBearerTokenCredentialID'
                     def bearerTokenCredential = credentials(bearerTokenCredentialId)
                     def bearerToken = bearerTokenCredential ? bearerTokenCredential.toString() : ''
                     
                     def headers = [
                         Authorization: "Bearer $bearerToken"
-                       ]
+                    ]
 
                     def response = httpRequest(
                         contentType: 'APPLICATION_JSON',
                         httpMode: 'POST',
                         requestBody: "{\"inputText\": \"${prompt}\"}",
-                        headers: headers,
+                        //customHeaders: headers,
+                       headers: headers,
                         url: serviceUrl
                     )
                         echo prompt
                         // Print the ChatGPT response
                         echo "ChatGPT suggests: ${response.getContent()}"
-                }
+                       ////chatgpt end
+             }
             }
             }
             
