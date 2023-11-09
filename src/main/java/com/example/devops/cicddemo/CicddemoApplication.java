@@ -9,6 +9,6 @@ public class CicddemoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CicddemoApplication.class, args);
 
-	
+	}
 	
 }
