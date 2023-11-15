@@ -10,5 +10,5 @@ public class CicddemoApplication {
 		SpringApplication.run(CicddemoApplication.class, args);
 
 	
-	
+	}
 }
