@@ -10,7 +10,7 @@ import com.example.devops.cicddemo.service.IProductService;
 @RestController
 public class ProductController 
 {
-//@Autowired
+@Autowired
 private IProductService iproductService;
 
 @GetMapping(value = "/products")
